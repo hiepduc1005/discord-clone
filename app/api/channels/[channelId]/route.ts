@@ -54,7 +54,7 @@ export async function DELETE(
 
 export async function PATCH(
     req:Request,
-    {params} : {params : {channelId: string}}
+    {params} : {params : Promise<{channelId: string}>}
 ){
 
     try {
@@ -92,7 +92,7 @@ export async function PATCH(
                 channels:{
                     update:{
                         where: {
-                            id: params.channelId,
+                            id: (await params).channelId,
                             NOT: {
                                 name: 'general'
                             }
