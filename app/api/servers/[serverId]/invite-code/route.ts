@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 
 export async function PATCH(
   req: Request,
-  context: { params: { serverId: string } } // Đảm bảo context được dùng đúng
+  context: { params:  Promise<{ serverId: string }> } // Đảm bảo context được dùng đúng
 ) {
   try {
     const { params } =  context; // Truy cập params từ context
@@ -15,13 +15,13 @@ export async function PATCH(
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    if (!params?.serverId) {
+    if (!(await params)?.serverId) {
       return new NextResponse("Server ID Missing", { status: 400 });
     }
 
     const server = await db.server.update({
       where: {
-        id:  params?.serverId,
+        id:  (await params)?.serverId,
         profileId: profile.id,
       },
       data: {

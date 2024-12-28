@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 
 export async function DELETE(
     req:Request,
-    {params} : {params : {channelId: string}}
+    {params} : {params : Promise<{channelId: string}>}
 ){
 
     try {
@@ -37,7 +37,7 @@ export async function DELETE(
             data: {
                 channels: {
                     delete:{
-                        id: params.channelId,
+                        id: (await params).channelId,
                         name: {
                             not: "general"
                         }

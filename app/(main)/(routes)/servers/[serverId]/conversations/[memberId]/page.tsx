@@ -10,10 +10,10 @@ import { redirect } from 'next/navigation'
 import React from 'react'
 
 interface MemberIdPageProps{
-    params: {
+    params: Promise<{
         memberId: string,
         serverId: string
-    },
+    }>,
     searchParams: {
         video ?:boolean
     }
@@ -31,7 +31,7 @@ const MemberIdPage = async ({
 
     const currentMember = await db.member.findFirst({
         where: {
-            serverId: params.serverId,
+            serverId: (await params).serverId,
             profileId: profile.id
         },
         include: {
@@ -43,10 +43,10 @@ const MemberIdPage = async ({
         return redirect("/")
     }
 
-    const conversation = await getOrCreateConversation(currentMember.id, params.memberId)
+    const conversation = await getOrCreateConversation(currentMember.id, (await params).memberId)
 
     if(!conversation){
-        return redirect(`/servers/${params.serverId}`)
+        return redirect(`/servers/${(await params).serverId}`)
     }
 
     const {memberOne, memberTwo} = conversation;
@@ -59,7 +59,7 @@ const MemberIdPage = async ({
             <ChatHeader 
                 imageUrl={otherMember.profile.imageUrl}
                 name={otherMember.profile.name}
-                serverId={params.serverId}
+                serverId={(await params).serverId}
                 type="conversation"
             />
             {searchParams.video && (

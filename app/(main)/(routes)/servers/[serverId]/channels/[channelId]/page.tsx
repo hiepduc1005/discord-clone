@@ -10,10 +10,10 @@ import { redirect } from 'next/navigation';
 import React from 'react'
 
 interface ChangIdPageProps{
-  params: {
+  params: Promise<{ 
     serverId: string;
     channelId: string;
-  }
+  }>
 }
 
 const ChangIdPage = async ({
@@ -27,13 +27,13 @@ const ChangIdPage = async ({
 
   const channel = await db.channel.findUnique({
     where: {
-      id: params.channelId
+      id: (await params).channelId
     }
   })
 
   const member = await db.member.findFirst({
     where: {
-      serverId: params.serverId,
+      serverId: (await params).serverId,
       profileId: profile.id
     }
   })

@@ -4,9 +4,9 @@ import { RedirectToSignIn } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 
 interface InviteCodePageProps {
-  params: {
+  params:  Promise<{ slug: string
     inviteCode: string;
-  };
+    }>
 }
 
 const InviteCodePage = async ({
@@ -21,14 +21,14 @@ const InviteCodePage = async ({
   }
 
   // Nếu inviteCode không tồn tại, redirect về trang chủ
-  if (!params.inviteCode) {
+  if (!(await params).inviteCode) {
     return redirect("/");
   }
 
   // Tìm server có inviteCode và người dùng đã là thành viên
   const existingServer = await db.server.findFirst({
     where: {
-      inviteCode: params.inviteCode,
+      inviteCode: (await params).inviteCode,
       members: {
         some: {
           profileId: profile.id,
@@ -45,7 +45,7 @@ const InviteCodePage = async ({
   // Cập nhật server, thêm thành viên vào server nếu inviteCode hợp lệ
   const server = await db.server.update({
     where: {
-      inviteCode: params.inviteCode,
+      inviteCode: (await params).inviteCode,
     },
     data: {
       members: {

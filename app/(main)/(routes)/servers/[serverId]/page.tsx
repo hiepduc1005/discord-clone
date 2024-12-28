@@ -4,9 +4,9 @@ import { RedirectToSignIn } from '@clerk/nextjs'
 import { redirect } from 'next/navigation'
 
 interface ServerIdPageProps{ 
-  params: {
+  params: Promise<{
     serverId: string
-  }
+  }>
 }
 
 const ServerPage = async ({
@@ -20,7 +20,7 @@ const ServerPage = async ({
 
   const server = await db.server.findUnique({
     where: {
-      id: params?.serverId,
+      id: (await params)?.serverId,
       members: {
         some: {
           profileId: profile.id
@@ -45,7 +45,7 @@ const ServerPage = async ({
     return null;
   }
 
-  return redirect(`/servers/${params.serverId}/channels/${initialChannel?.id}`)
+  return redirect(`/servers/${(await params).serverId}/channels/${initialChannel?.id}`)
 }
 
 export default ServerPage
