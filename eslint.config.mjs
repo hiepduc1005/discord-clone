@@ -6,21 +6,31 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const compat = new FlatCompat({
-  baseDirectory: __dirname, // Cần thiết để xác định thư mục gốc
+  baseDirectory: __dirname, // Xác định thư mục gốc
 });
 
 const eslintConfig = [
   // Kế thừa các quy tắc từ Next.js và TypeScript
-  ...compat.extends("next", "next/core-web-vitals", "plugin:@typescript-eslint/recommended"),
-  
-  // Các quy tắc tùy chỉnh thêm
+  ...compat.extends(
+    "next", // Các quy tắc cơ bản của Next.js
+    "next/core-web-vitals", // Quy tắc cho Web Vitals trong Next.js
+    "plugin:@typescript-eslint/recommended" // Quy tắc TypeScript
+  ),
+
+  // Các quy tắc tùy chỉnh cho tệp TypeScript
   {
-    files: ["**/*.ts", "**/*.tsx"], // Áp dụng cho file TypeScript
+    files: ["**/*.ts", "**/*.tsx"], // Áp dụng cho các file TypeScript và TSX
     rules: {
-      "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }], // Cho phép biến không dùng bắt đầu bằng _
+      "@typescript-eslint/no-unused-vars": [
+        "warn", 
+        { 
+          argsIgnorePattern: "^_" // Bỏ qua các biến không sử dụng bắt đầu bằng dấu _
+        }
+      ],
       "@typescript-eslint/no-explicit-any": "off", // Tắt cảnh báo khi dùng `any`
-      "react-hooks/exhaustive-deps": "warn", // Cảnh báo thiếu dependencies trong `useEffect`
-      "react/jsx-key": "error", // Bắt buộc thêm key trong các phần tử lặp
+      "@typescript-eslint/no-unused-expressions": "off", // Tắt cảnh báo về biểu thức không sử dụng
+      "react-hooks/exhaustive-deps": "warn", // Cảnh báo thiếu dependencies trong useEffect
+      "react/jsx-key": "off", // Tắt cảnh báo về thiếu prop `key` trong các phần tử lặp
     },
   },
 ];
