@@ -30,6 +30,10 @@ export const SocketProvider = ({children} : {children : React.ReactNode}) => {
             setIsConnected(true)
         })
 
+        socketInstance.on("error", (error: any) => {
+            console.error("Socket.IO error:", error);
+        });
+
         socketInstance.on("disconnect", () => {
             setIsConnected(false)
         })
