@@ -1,66 +1,70 @@
-import { currentProfile } from "@/lib/current-profile"
-import  db  from "@/lib/db";
+import { currentProfile } from "@/lib/current-profile";
+import db from "@/lib/db";
 import { RedirectToSignIn } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 
-interface InviteCodePageProps{
-    params: {
-        inviteCode: string,
-    }
+interface InviteCodePageProps {
+  params: {
+    inviteCode: string;
+  };
 }
 
 const InviteCodePage = async ({
-    params
+  params,
 }: InviteCodePageProps) => {
+  // Lấy thông tin profile của người dùng
+  const profile = await currentProfile();
 
-    const profile = await currentProfile();
+  // Nếu không có profile, redirect tới trang đăng nhập
+  if (!profile) {
+    return <RedirectToSignIn />;
+  }
 
-    if(!profile){
-        return RedirectToSignIn({})
-    }
+  // Nếu inviteCode không tồn tại, redirect về trang chủ
+  if (!params.inviteCode) {
+    return redirect("/");
+  }
 
-    if(!params.inviteCode){
-        return redirect("/")
-    }
-
-    const existingServer = await db.server.findFirst({
-        where: {
-            inviteCode: params.inviteCode,
-            members:{
-                some: {
-                    profileId: profile.id,
-                }
-            }
-        }
-    })
-
-    if(existingServer){
-        return redirect(`/servers/${existingServer.id}`)
-    }
-
-    const server = await db.server.update({
-        where: {
-            inviteCode: params.inviteCode,
+  // Tìm server có inviteCode và người dùng đã là thành viên
+  const existingServer = await db.server.findFirst({
+    where: {
+      inviteCode: params.inviteCode,
+      members: {
+        some: {
+          profileId: profile.id,
         },
-        data: {
-            members: {
-                create: [
-                    {
-                        profileId: profile.id
-                    }
-                ]
-            }
-        }
-        
-    })
+      },
+    },
+  });
 
-    if(server){
-        return redirect(`/servers/${server.id}`)
-    }
+  // Nếu server đã tồn tại, redirect tới server đó
+  if (existingServer) {
+    return redirect(`/servers/${existingServer.id}`);
+  }
 
-  return (
-    <div>InviteCode</div>
-  )
-}
+  // Cập nhật server, thêm thành viên vào server nếu inviteCode hợp lệ
+  const server = await db.server.update({
+    where: {
+      inviteCode: params.inviteCode,
+    },
+    data: {
+      members: {
+        create: [
+          {
+            profileId: profile.id,
+          },
+        ],
+      },
+    },
+  });
 
-export default InviteCodePage
+  // Nếu thành công, redirect tới server vừa cập nhật
+  if (server) {
+    return redirect(`/servers/${server.id}`);
+  }
+
+  // Trường hợp không có server nào tìm thấy hoặc cập nhật thất bại
+  return <div>InviteCode</div>;
+};
+
+export default InviteCodePage;
