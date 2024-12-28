@@ -1,5 +1,5 @@
 import { InitialModal } from '@/components/modals/initital-modal';
-import { db } from '@/lib/db';
+import  db  from '@/lib/db';
 import { inititalProfile } from '@/lib/inital-profile'
 import { RedirectToSignIn } from '@clerk/nextjs';
 import { redirect } from 'next/navigation';

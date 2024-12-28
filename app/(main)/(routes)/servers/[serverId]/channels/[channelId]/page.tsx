@@ -3,7 +3,7 @@ import { ChatInput } from '@/components/chat/chat-input';
 import { ChatMessages } from '@/components/chat/chat-message';
 import { MediaRoom } from '@/components/ui/media-room';
 import { currentProfile } from '@/lib/current-profile';
-import { db } from '@/lib/db';
+import db  from '@/lib/db';
 import { RedirectToSignIn } from '@clerk/nextjs';
 import { ChannelType } from '@prisma/client';
 import { redirect } from 'next/navigation';
