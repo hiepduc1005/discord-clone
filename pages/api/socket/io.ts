@@ -3,11 +3,11 @@ import { Server as ServerIO } from "socket.io";
 import { NextApiResponseServerIo } from "@/type";
 import { NextApiRequest } from 'next';
 
-// export const config = {
-//     api: {
-//         bodyParser: false, // Disable body parsing for Socket.io requests
-//     },
-// };
+export const config = {
+    api: {
+        bodyParser: false, // Disable body parsing for Socket.io requests
+    },
+};
 console.log('Socket.io init'); // Log when the handler is hit
 
 const ioHandler = async (req: NextApiRequest, res: NextApiResponseServerIo) => {
@@ -34,8 +34,8 @@ const ioHandler = async (req: NextApiRequest, res: NextApiResponseServerIo) => {
 
     } catch (error) {
         // In lỗi vào console nếu có lỗi xảy ra
-        console.error('Error initializing socket.io:', error);
-        res.status(500).send('Internal Server Error');
+        console.log('Error initializing socket.io:', error);
+        res.status(500).send({'Internal Server Error':error });
     }
 };
 
