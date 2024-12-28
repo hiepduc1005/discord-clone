@@ -2,7 +2,6 @@ import { InitialModal } from '@/components/modals/initital-modal';
 import { db } from '@/lib/db';
 import { inititalProfile } from '@/lib/inital-profile'
 import { RedirectToSignIn } from '@clerk/nextjs';
-import { auth } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import React from 'react'
 
