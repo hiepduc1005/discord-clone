@@ -14,9 +14,9 @@ interface MemberIdPageProps{
         memberId: string,
         serverId: string
     }>,
-    searchParams: {
+    searchParams: Promise<{
         video ?:boolean
-    }
+    }>
 }
 
 const MemberIdPage = async ({
@@ -62,14 +62,14 @@ const MemberIdPage = async ({
                 serverId={(await params).serverId}
                 type="conversation"
             />
-            {searchParams.video && (
+            {(await searchParams).video && (
                 <MediaRoom
                     chatId={conversation.id}
                     video={true}
                     audio={true}
                 />
             )}
-            {!searchParams.video && (
+            {!(await searchParams).video && (
                 <>
                     <ChatMessages 
                         member={currentMember}
