@@ -62,7 +62,7 @@ export async function DELETE(
 
 export async function PATCH(
     req: Request,
-    {params} : {params: {memberId: string}}
+    {params} : {params: Promise<{memberId: string}>}
 ){
     try {
         const profile = await currentProfile();
@@ -78,7 +78,7 @@ export async function PATCH(
             return new NextResponse("Server Id Missing" , {status: 400})
         }
 
-        if(!params.memberId){
+        if(!(await params).memberId){
             return new NextResponse("Member Id Missing" , {status: 400})
  
         }
@@ -92,7 +92,7 @@ export async function PATCH(
                 members: {
                     update: {
                         where: {
-                            id: params.memberId,
+                            id: (await params).memberId,
                             profileId: {
                                 not: profile.id
                             }

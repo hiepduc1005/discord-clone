@@ -35,11 +35,11 @@ export async function PATCH(
 
 export async function DELETE(
     req:Request,
-    {params} : {params : {serverId: string}}
+    {params} : {params : Promise<{serverId: string}>}
 ){
     try {
         const profile = await currentProfile();
-        const serverParamId = await params.serverId;
+        const serverParamId = await (await params).serverId;
 
         if(!profile){
             return new NextResponse("Unauthorized" , {status: 401})
