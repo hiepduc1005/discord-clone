@@ -1,6 +1,6 @@
 import { RedirectToSignIn } from "@clerk/nextjs";
 import { currentUser} from "@clerk/nextjs/server";
-import { db } from "./db";
+import  db  from "./db";
 
 export const inititalProfile = async (): Promise<{
     id: string;

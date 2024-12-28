@@ -1,4 +1,4 @@
-import { db } from "./db"
+import  db  from "./db"
 
 export const getOrCreateConversation = async (memberOneId : string , memberTwoId : string) => {
     let conversation = await findConversation(memberOneId,memberTwoId) 
