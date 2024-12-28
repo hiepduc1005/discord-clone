@@ -10,7 +10,7 @@ import { NextApiRequest } from 'next';
 // };
 const ioHandler = async (req: NextApiRequest, res: NextApiResponseServerIo) => {
     try {
-    //   console.log('Socket.io handler is called'); // Log when the handler is hit
+      console.log('Socket.io handler is called'); // Log when the handler is hit
 
     //     // Kiểm tra xem server có socket.io chưa
     //     if (!res.socket.server.io) {
