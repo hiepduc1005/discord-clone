@@ -3,11 +3,11 @@ import { Server as ServerIO } from "socket.io";
 import { NextApiResponseServerIo } from "@/type";
 import { NextApiRequest } from 'next';
 
-export const config = {
-    api: {
-        bodyParser: false, // Disable body parsing for Socket.io requests
-    },
-};
+// export const config = {
+//     api: {
+//         bodyParser: false, // Disable body parsing for Socket.io requests
+//     },
+// };
 console.log('Socket.io init'); // Log when the handler is hit
 
 const ioHandler = async (req: NextApiRequest, res: NextApiResponseServerIo) => {
@@ -17,8 +17,9 @@ const ioHandler = async (req: NextApiRequest, res: NextApiResponseServerIo) => {
         // Kiểm tra xem server có socket.io chưa
         if (!res.socket.server.io) {
             const path = '/api/socket/io';
+            console.log(path)
             const httpServer: NetServer = res.socket.server as any;
-
+            
             // Khởi tạo Socket.io server
             const io = new ServerIO(httpServer, {
                 path: path,
@@ -26,7 +27,8 @@ const ioHandler = async (req: NextApiRequest, res: NextApiResponseServerIo) => {
                 
                 transports: ['polling', 'websocket']
             });
-
+            
+            console.log(io)
             res.socket.server.io = io; // Gán socket.io vào server
 
             io.on('error', (err) => {
