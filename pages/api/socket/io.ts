@@ -28,6 +28,10 @@ const ioHandler = async (req: NextApiRequest, res: NextApiResponseServerIo) => {
             });
 
             res.socket.server.io = io; // Gán socket.io vào server
+
+            io.on('error', (err) => {
+                console.log('Socket.IO error:', err.message, err.stack);
+              });
         }
 
         res.end(); // Kết thúc yêu cầu
