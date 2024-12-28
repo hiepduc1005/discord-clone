@@ -22,8 +22,11 @@ const ioHandler = async (req: NextApiRequest, res: NextApiResponseServerIo) => {
             const io = new ServerIO(httpServer, {
                 path: path,
                 addTrailingSlash: false,
-                
-                transports: ['polling', 'websocket']
+                cors: {
+                    origin: ["*"], // Thay đổi theo domain của bạn
+                    methods: ["GET", "POST"],
+                    credentials: true, // Cho phép gửi cookie nếu cần
+                }
             });
             
             console.log(io)
